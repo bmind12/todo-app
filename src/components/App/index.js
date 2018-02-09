@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import { v4 as uuid } from 'uuid';
 import base from '../../base';
-
-// Components
 import NewTaskForm from './NewTaskForm';
 import TodoList from './TodoList';
 
@@ -19,7 +17,7 @@ class App extends PureComponent {
     }
     
     // NewTaskForm functions
-    handleTodoAdd(task) {
+    handleTodoAdd = (task) => {
         const updatedData = Array.from(this.state.data).slice();
         
         updatedData.push({
@@ -34,7 +32,7 @@ class App extends PureComponent {
     }
 
     // TodoItem functions
-    handleTodoEdit(id, newName) {
+    handleTodoEdit = (id, newName) => {
         const updatedData = this.state.data.map(task => {
             if (task.id === id) task.name = newName;
 
@@ -46,7 +44,7 @@ class App extends PureComponent {
         });
     }
 
-    handleTodoToggle(id) {
+    handleTodoToggle = (id) => {
         const updatedData = this.state.data.map(task => {
             if (task.id === id) task.isDone = !task.isDone;
 
@@ -58,7 +56,7 @@ class App extends PureComponent {
         });
     }
 
-    handleTodoRemove(id) {
+    handleTodoRemove = (id) => {
         const updatedData = this.state.data.filter(task => task.id !== id);
         
         this.setState({
@@ -70,17 +68,17 @@ class App extends PureComponent {
         return (
             <div>
                 <NewTaskForm
-                    handleTodoAdd={this.handleTodoAdd.bind(this)}
+                    handleTodoAdd={this.handleTodoAdd}
                 />
                 <TodoList 
                     data={this.state.data}
-                    handleTodoEdit={this.handleTodoEdit.bind(this)}
-                    handleTodoRemove={this.handleTodoRemove.bind(this)}
-                    handleTodoToggle={this.handleTodoToggle.bind(this)}
+                    handleTodoEdit={this.handleTodoEdit}
+                    handleTodoRemove={this.handleTodoRemove}
+                    handleTodoToggle={this.handleTodoToggle}
                 />
             </div>
         )
-        }
+    }
 }
 
 export default App;

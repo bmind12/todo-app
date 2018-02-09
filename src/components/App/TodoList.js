@@ -1,7 +1,5 @@
 import React from 'react';
 import propTypes from 'prop-types';
-
-// Components
 import TodoItem from './TodoItem';
 
 const TodoList = props => {

@@ -8,13 +8,13 @@ class TodoItem extends PureComponent {
         isEditable: false
     }
     
-    changeInput(evt) {
+    changeInput = (evt) => {
         this.setState({
             input: evt.target.value
         });
     }
 
-    saveInput(evt) {
+    saveInput = (evt) => {
         evt.preventDefault();
 
         if (!this.state.input) return;
@@ -26,14 +26,14 @@ class TodoItem extends PureComponent {
         });
     }
 
-    toggleInput() {
+    toggleInput = () => {
         this.setState({
             input: this.props.name,
             isEditable: true
         });
     }
     
-    handleClickOutside(evt) {
+    handleClickOutside = (evt) => {
         this.setState({
             isEditable: false
         });
@@ -57,14 +57,14 @@ class TodoItem extends PureComponent {
                             />
                             <input
                                 className="list__label list__label--edit"
-                                onChange={this.changeInput.bind(this)}
-                                onSubmit={this.saveInput.bind(this)}
+                                onChange={this.changeInput}
+                                onSubmit={this.saveInput}
                                 value={this.state.input}
                             />
                             <input
                                 className="list__button list__button--save"
                                 type="submit"
-                                onClick={this.saveInput.bind(this)}
+                                onClick={this.saveInput}
                                 value="Save"
                             />
                         </form>
@@ -75,7 +75,7 @@ class TodoItem extends PureComponent {
                                 onChange={ () => this.props.handleTodoToggle(id)}
                                 type="checkbox"
                             />
-                            <label className="list__label list__label--display" onDoubleClick={this.toggleInput.bind(this)}>
+                            <label className="list__label list__label--display" onDoubleClick={this.toggleInput}>
                                 {name}
                             </label>
                             <button className="list__button list__button--remove" onClick={ () => this.props.handleTodoRemove(id) }>

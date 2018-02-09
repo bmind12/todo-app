@@ -6,13 +6,13 @@ class NewTaskForm extends PureComponent {
         input: ''
     }
 
-    updateInput(evt) {
+    updateInput = (evt) => {
         this.setState({
             input: evt.target.value
         });
     }
     
-    submitInput(evt) {
+    submitInput = (evt) => {
         evt.preventDefault();
 
         if (!this.state.input) return;
@@ -32,12 +32,12 @@ class NewTaskForm extends PureComponent {
                     id="taskName"
                     type="text"
                     value={this.state.input}
-                    onChange={this.updateInput.bind(this)}
+                    onChange={this.updateInput}
                 />
                 <input
                     type="submit"
                     value="Add"
-                    onClick={this.submitInput.bind(this)}
+                    onClick={this.submitInput}
                 />
             </form>
         )
