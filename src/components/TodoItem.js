@@ -1,5 +1,7 @@
 // @flow
 import React, { PureComponent } from 'react';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import onClickOutside from "react-onclickoutside";
 import { Button, Checkbox, Form, Input, List } from 'antd';
 
@@ -46,14 +48,23 @@ class TodoItem extends PureComponent<Props, State> {
         });
     }
 
+    _deleteTask = async (id) => {
+        await this.props.deleteTask({
+            variables: {
+                id
+            }
+        });
+    }
+
     render() {
         const { id, name } = this.props;
-    
+        console.log(id);
+
         return (
             <List.Item
                 actions={[
                     <a onClick={ () => this.handleModeSwitch() }>edit</a>,
-                    <a onClick={ () => this.props.removeTodo(id) }>delete</a>
+                    <a onClick={ () => this._deleteTask(id) }>delete</a>
                 ]}
             >
             { this.state.readOnly
@@ -89,4 +100,12 @@ class TodoItem extends PureComponent<Props, State> {
     }
 }
 
-export default Form.create()(onClickOutside(TodoItem));
+const REMOVE_TASK = gql`
+    mutation TaskMutation($id: ID!) {
+        deleteTask(id: $id) {
+            id
+        }
+    }
+`
+
+export default Form.create()(graphql(REMOVE_TASK, { name: 'deleteTask' })(onClickOutside(TodoItem)));
