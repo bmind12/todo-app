@@ -1,6 +1,5 @@
-type Post {
+type Task {
   id: ID! @unique
-  isPublished: Boolean! @default(value: false)
-  title: String!
-  text: String!
+  isDone: Boolean! @default(value: false)
+  name: String!
 }
