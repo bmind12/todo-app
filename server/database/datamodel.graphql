@@ -1,0 +1,5 @@
+type Task {
+  id: ID! @unique
+  isDone: Boolean! @default(value: false)
+  name: String!
+}

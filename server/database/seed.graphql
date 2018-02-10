@@ -1,0 +1,22 @@
+mutation {
+  first: createTask(data: {
+    name: "Task 1"
+    isDone: false
+  }) {
+    id
+  }
+  
+  second: createTask(data: {
+    name: "Task 2"
+    isDone: false
+  }) {
+    id
+  }
+  
+  third: createTask(data: {
+    name: "Task 3"
+    isDone: false
+  }) {
+    id
+  }
+}
