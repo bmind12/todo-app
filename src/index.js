@@ -1,18 +1,28 @@
 // @flow
-import React, { PureComponent } from 'react';
-import { render } from 'react-dom';
-import registerServiceWorker from './registerServiceWorker';
-import { v4 as uuid } from 'uuid';
-import base from './base';
-import './styles/index.css';
-import NewTaskForm from './components/NewTaskForm';
-import TodoList from './components/TodoList';
-import type { Task } from './types';
+import React, { PureComponent } from 'react'
+import { render } from 'react-dom'
+import registerServiceWorker from './registerServiceWorker'
+import { v4 as uuid } from 'uuid'
+import { ApolloProvider } from 'react-apollo'
+import { ApolloClient } from 'apollo-client'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+import NewTaskForm from './components/NewTaskForm'
+import TodoList from './components/TodoList'
+import type { Task } from './types'
+import './styles/index.css'
+
+const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache()
+})
 
 type State = {
     data: Array<Task>,
     newTask: string
-};
+}
 
 class App extends PureComponent<Props, State> {
     state = {
@@ -105,5 +115,10 @@ class App extends PureComponent<Props, State> {
     }
 }
 
-render(<App />, document.getElementById('root'));
-registerServiceWorker();
+render(
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>,
+    document.getElementById('root')
+)
+registerServiceWorker()
