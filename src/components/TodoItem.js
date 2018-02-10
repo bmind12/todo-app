@@ -1,9 +1,23 @@
+// @flow
 import React, { PureComponent } from 'react';
-// import propTypes from 'prop-types';
 import onClickOutside from "react-onclickoutside";
 import { Button, Checkbox, Form, Input, List } from 'antd';
 
-class TodoItem extends PureComponent {
+type Props = {
+    editTodo: (id: string, newName: string) => void,
+    removeTodo: (id: string) => void,
+    toggleTodo: (id: string) => void,
+    id: string,
+    isDone: boolean,
+    name: string
+};
+
+type State = {
+    value: string,
+    readOnly: boolean
+};
+
+class TodoItem extends PureComponent<Props, State> {
     state = {
         value: '',
         readOnly: true
@@ -73,15 +87,6 @@ class TodoItem extends PureComponent {
             </List.Item>
         )
     }
-}
-
-TodoItem.propTypes = {
-    // handleTodoEdit: propTypes.func.isRequired,
-    // handleTodoRemove: propTypes.func.isRequired,
-    // handleTodoToggle: propTypes.func.isRequired,
-    // id: propTypes.string.isRequired,
-    // isDone: propTypes.bool.isRequired,
-    // name: propTypes.string.isRequired
 }
 
 export default Form.create()(onClickOutside(TodoItem));

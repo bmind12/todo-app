@@ -1,10 +1,22 @@
+// @flow
 import React from 'react';
-import propTypes from 'prop-types';
-import onClickOutside from 'react-onclickoutside';
 import { List } from 'antd';
 import TodoItem from './TodoItem';
+import type { Task } from '../types';
 
-const TodoList = props => {
+type Props = {
+    data: Array<Task>,
+    editTodo: (id: string, newName: string) => void,
+    removeTodo: (id: string) => void,
+    toggleTodo: (id: string) => void
+};
+
+const TodoList = (props: Props) => {
+    
+    TodoList.defaultProps = {
+        data: []
+    };
+
     return (
         <List
             bordered
@@ -26,16 +38,5 @@ const TodoList = props => {
         />
     )
 }
-    
-TodoList.propTypes = {
-    data: propTypes.array,
-    // editTodo: propTypes.func.isRequired,
-    removeTodo: propTypes.func.isRequired,
-    toggleTodo: propTypes.func.isRequired
-};
 
-TodoList.defaultProps = {
-    data: []
-};
-
-export default onClickOutside(TodoList);
+export default TodoList;

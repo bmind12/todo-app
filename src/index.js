@@ -1,13 +1,20 @@
+// @flow
 import React, { PureComponent } from 'react';
 import { render } from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 import { v4 as uuid } from 'uuid';
 import base from './base';
+import './styles/index.css';
 import NewTaskForm from './components/NewTaskForm';
 import TodoList from './components/TodoList';
-import './styles/index.css';
+import type { Task } from './types';
 
-class App extends PureComponent {
+type State = {
+    data: Array<Task>,
+    newTask: string
+};
+
+class App extends PureComponent<Props, State> {
     state = {
         data: [],
         newTask: ''
@@ -18,6 +25,7 @@ class App extends PureComponent {
             context: this,
             state: 'data'
         });
+        console.log(this.props);
     }
     
     // NewTaskForm functions
@@ -26,7 +34,7 @@ class App extends PureComponent {
             newTask: evt.target.value
         });
     }
-
+    
     submitNewTask = (evt) => {
         evt.preventDefault();
 

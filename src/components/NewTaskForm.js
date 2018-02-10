@@ -1,10 +1,16 @@
+// @flow
 import React, { PureComponent } from 'react';
-import propTypes from 'prop-types';
 import { Button, Form, Input } from 'antd';
 const FormItem = Form.Item;
 
-class NewTaskForm extends PureComponent {
-    handleSubmit = (evt) => {
+type Props = {
+    changeNewTask: (evt: SyntheticEvent<HTMLInputElement>) => void,
+    submitNewTask: (evt: SyntheticEvent<HTMLFormElement>) => void,
+    form: any
+}
+
+class NewTaskForm extends PureComponent<Props> {
+    handleSubmit = (evt: SyntheticEvent<HTMLFormElement>) => {
         this.props.submitNewTask(evt);
         this.props.form.resetFields();
     }
@@ -36,10 +42,5 @@ class NewTaskForm extends PureComponent {
         )
     }
 }
-
-NewTaskForm.propTypes = {
-    changeNewTask: propTypes.func.isRequired,
-    submitNewTask: propTypes.func.isRequired
-};
 
 export default Form.create()(NewTaskForm);
