@@ -1,11 +1,12 @@
-# import Post from "./generated/prisma.graphql"
+# import Task from "./generated/prisma.graphql"
 
 type Query {
-  todoList: [Task!]!
+  todoList(first: Int, isDone: Boolean, last: Int): [Task!]!
 }
 
 type Mutation {
-  editTask(id: ID!, name: String): Task
+  addTask(name: String): Task!
   deleteTask(id: ID!): Task
-  addTask(id: ID!): Task
+  editTask(id: ID!, name: String): Task
+  toggleDone(id: ID!, isDone: Boolean): Task
 }
