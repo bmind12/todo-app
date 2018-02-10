@@ -7,5 +7,5 @@ type Query {
 type Mutation {
   editTask(id: ID!, name: String): Task
   deleteTask(id: ID!): Task
-  publish(id: ID!): Task
+  addTask(id: ID!): Task
 }

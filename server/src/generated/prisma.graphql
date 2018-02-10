@@ -5,11 +5,10 @@
 # Model Types
 #
 
-type Post implements Node {
+type Task implements Node {
   id: ID!
-  isPublished: Boolean!
-  title: String!
-  text: String!
+  isDone: Boolean!
+  name: String!
 }
 
 
@@ -17,7 +16,7 @@ type Post implements Node {
 # Other Types
 #
 
-type AggregatePost {
+type AggregateTask {
   count: Int!
 }
 
@@ -28,12 +27,12 @@ type BatchPayload {
 scalar Long
 
 type Mutation {
-  createPost(data: PostCreateInput!): Post!
-  updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
-  deletePost(where: PostWhereUniqueInput!): Post
-  upsertPost(where: PostWhereUniqueInput!, create: PostCreateInput!, update: PostUpdateInput!): Post!
-  updateManyPosts(data: PostUpdateInput!, where: PostWhereInput!): BatchPayload!
-  deleteManyPosts(where: PostWhereInput!): BatchPayload!
+  createTask(data: TaskCreateInput!): Task!
+  updateTask(data: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task
+  deleteTask(where: TaskWhereUniqueInput!): Task
+  upsertTask(where: TaskWhereUniqueInput!, create: TaskCreateInput!, update: TaskUpdateInput!): Task!
+  updateManyTasks(data: TaskUpdateInput!, where: TaskWhereInput!): BatchPayload!
+  deleteManyTasks(where: TaskWhereInput!): BatchPayload!
 }
 
 enum MutationType {
@@ -53,71 +52,77 @@ type PageInfo {
   endCursor: String
 }
 
-type PostConnection {
+type Query {
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task]!
+  task(where: TaskWhereUniqueInput!): Task
+  tasksConnection(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskConnection!
+  node(id: ID!): Node
+}
+
+type Subscription {
+  task(where: TaskSubscriptionWhereInput): TaskSubscriptionPayload
+}
+
+type TaskConnection {
   pageInfo: PageInfo!
-  edges: [PostEdge]!
-  aggregate: AggregatePost!
+  edges: [TaskEdge]!
+  aggregate: AggregateTask!
 }
 
-input PostCreateInput {
-  isPublished: Boolean
-  title: String!
-  text: String!
+input TaskCreateInput {
+  isDone: Boolean
+  name: String!
 }
 
-type PostEdge {
-  node: Post!
+type TaskEdge {
+  node: Task!
   cursor: String!
 }
 
-enum PostOrderByInput {
+enum TaskOrderByInput {
   id_ASC
   id_DESC
-  isPublished_ASC
-  isPublished_DESC
-  title_ASC
-  title_DESC
-  text_ASC
-  text_DESC
+  isDone_ASC
+  isDone_DESC
+  name_ASC
+  name_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
 }
 
-type PostPreviousValues {
+type TaskPreviousValues {
   id: ID!
-  isPublished: Boolean!
-  title: String!
-  text: String!
+  isDone: Boolean!
+  name: String!
 }
 
-type PostSubscriptionPayload {
+type TaskSubscriptionPayload {
   mutation: MutationType!
-  node: Post
+  node: Task
   updatedFields: [String!]
-  previousValues: PostPreviousValues
+  previousValues: TaskPreviousValues
 }
 
-input PostSubscriptionWhereInput {
-  AND: [PostSubscriptionWhereInput!]
-  OR: [PostSubscriptionWhereInput!]
+input TaskSubscriptionWhereInput {
+  AND: [TaskSubscriptionWhereInput!]
+  OR: [TaskSubscriptionWhereInput!]
   mutation_in: [MutationType!]
   updatedFields_contains: String
   updatedFields_contains_every: [String!]
   updatedFields_contains_some: [String!]
-  node: PostWhereInput
+  node: TaskWhereInput
 }
 
-input PostUpdateInput {
-  isPublished: Boolean
-  title: String
-  text: String
+input TaskUpdateInput {
+  isDone: Boolean
+  name: String
 }
 
-input PostWhereInput {
-  AND: [PostWhereInput!]
-  OR: [PostWhereInput!]
+input TaskWhereInput {
+  AND: [TaskWhereInput!]
+  OR: [TaskWhereInput!]
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -132,49 +137,24 @@ input PostWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  isPublished: Boolean
-  isPublished_not: Boolean
-  title: String
-  title_not: String
-  title_in: [String!]
-  title_not_in: [String!]
-  title_lt: String
-  title_lte: String
-  title_gt: String
-  title_gte: String
-  title_contains: String
-  title_not_contains: String
-  title_starts_with: String
-  title_not_starts_with: String
-  title_ends_with: String
-  title_not_ends_with: String
-  text: String
-  text_not: String
-  text_in: [String!]
-  text_not_in: [String!]
-  text_lt: String
-  text_lte: String
-  text_gt: String
-  text_gte: String
-  text_contains: String
-  text_not_contains: String
-  text_starts_with: String
-  text_not_starts_with: String
-  text_ends_with: String
-  text_not_ends_with: String
+  isDone: Boolean
+  isDone_not: Boolean
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
 }
 
-input PostWhereUniqueInput {
+input TaskWhereUniqueInput {
   id: ID
-}
-
-type Query {
-  posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post]!
-  post(where: PostWhereUniqueInput!): Post
-  postsConnection(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PostConnection!
-  node(id: ID!): Node
-}
-
-type Subscription {
-  post(where: PostSubscriptionWhereInput): PostSubscriptionPayload
 }
