@@ -6,7 +6,10 @@ import { ADD_TASK } from '../queries';
 const FormItem = Form.Item;
 
 type Props = {
-    form: any
+    form: any,
+    addTask: ({variables: {
+        name: string
+    }}) => void
 }
 
 type State = {

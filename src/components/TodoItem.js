@@ -6,10 +6,17 @@ import { REMOVE_TASK, TOGGLE_DONE } from '../queries';
 import { Button, Checkbox, Form, Input, List } from 'antd';
 
 type Props = {
-    editTodo: (id: string, newName: string) => void,
+    editTodo: (id: string, newName: string) => void,    
+    deleteTask: ({variables: {
+        id: string
+    }}) => void,
     id: string,
     isDone: boolean,
-    name: string
+    name: string,
+    toggleDone: ({variables: {
+        id: string,
+        isDone: boolean
+    }}) => void
 };
 
 type State = {

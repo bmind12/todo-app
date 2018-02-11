@@ -7,10 +7,11 @@ import TodoItem from './TodoItem';
 import type { Task } from '../types';
 
 type Props = {
-    data: Array<Task>,
-    editTodo: (id: string, newName: string) => void,
-    removeTodo: (id: string) => void,
-    toggleTodo: (id: string) => void
+    data: {
+        error: string,
+        loading: boolean,
+        todoList: Array<Task>
+    }
 };
 
 const TodoList = (props: Props) => {
@@ -34,7 +35,7 @@ const TodoList = (props: Props) => {
             <Alert
                 closable
                 description="Couldn't feth data from server"
-                message="Error"
+                message={data.error}
                 style={{ width: 480 }}
                 type="error"
             />
@@ -50,12 +51,9 @@ const TodoList = (props: Props) => {
             style={{ width: 480 }}
             renderItem={item => (
                 <TodoItem
-                    editTodo={props.editTodo}
                     id={item.id}
                     isDone={item.isDone}
                     name={item.name}
-                    removeTodo={props.removeTask}
-                    toggleTodo={props.toggleTodo}
                 />
                 
             )}
