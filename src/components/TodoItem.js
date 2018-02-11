@@ -1,14 +1,12 @@
 // @flow
 import React, { PureComponent } from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import onClickOutside from "react-onclickoutside";
+import { graphql, compose } from 'react-apollo';
+import onClickOutside from 'react-onclickoutside';
+import { REMOVE_TASK, TOGGLE_DONE } from '../queries';
 import { Button, Checkbox, Form, Input, List } from 'antd';
 
 type Props = {
     editTodo: (id: string, newName: string) => void,
-    removeTodo: (id: string) => void,
-    toggleTodo: (id: string) => void,
     id: string,
     isDone: boolean,
     name: string
@@ -56,9 +54,19 @@ class TodoItem extends PureComponent<Props, State> {
         });
     }
 
+    _toggleDone = async (evt, id) => {
+        const isDone = evt.target.checked;
+        
+        await this.props.toggleDone({
+            variables: {
+                id,
+                isDone
+            }
+        });
+    }
+
     render() {
         const { id, name } = this.props;
-        console.log(id);
 
         return (
             <List.Item
@@ -71,7 +79,7 @@ class TodoItem extends PureComponent<Props, State> {
                 ? (
                     <Checkbox
                         checked={this.props.isDone}
-                        onChange={ () => this.props.toggleTodo(id) }
+                        onChange={ (evt) => this._toggleDone(evt, id) }
                     >
                         {name}
                     </Checkbox>
@@ -100,12 +108,7 @@ class TodoItem extends PureComponent<Props, State> {
     }
 }
 
-const REMOVE_TASK = gql`
-    mutation TaskMutation($id: ID!) {
-        deleteTask(id: $id) {
-            id
-        }
-    }
-`
-
-export default Form.create()(graphql(REMOVE_TASK, { name: 'deleteTask' })(onClickOutside(TodoItem)));
+export default Form.create()(compose(
+    graphql(REMOVE_TASK, { name: 'deleteTask' }),
+    graphql(TOGGLE_DONE, { name: 'toggleDone' })
+)(onClickOutside(TodoItem)));

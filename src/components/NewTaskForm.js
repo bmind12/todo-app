@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 import { Button, Form, Input } from 'antd';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { ADD_TASK } from '../queries';
 const FormItem = Form.Item;
 
 type Props = {
@@ -70,14 +70,5 @@ class NewTaskForm extends PureComponent<Props, State> {
         )
     }
 }
-
-const ADD_TASK = gql`
-    mutation TaskMutation($name: String!) {
-        addTask(name: $name) {
-            id
-            name
-        }
-    }
-`
 
 export default Form.create()(graphql(ADD_TASK, { name: 'addTask' })(NewTaskForm))
