@@ -1,5 +1,8 @@
 [ignore]
-.*/node_modules/*
+.*/node_modules/protobufjs/src/bower.json
+.*/node_modules/react-apollo/index.js.flow
+.*/node_modules/react-apollo/react-apollo.umd.js
+.*/server/node_modules/config-chain/test/broken.json
 [include]
 
 [libs]
