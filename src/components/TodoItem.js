@@ -2,11 +2,14 @@
 import React, { PureComponent } from 'react';
 import { graphql, compose } from 'react-apollo';
 import onClickOutside from 'react-onclickoutside';
-import { REMOVE_TASK, TOGGLE_DONE } from '../queries';
+import { REMOVE_TASK, TOGGLE_DONE, UPDATE_TASK } from '../queries';
 import { Button, Checkbox, Form, Input, List } from 'antd';
 
 type Props = {
-    editTodo: (id: string, newName: string) => void,    
+    updateTask: ({variables: {
+        id: string,
+        name: string
+    }}) => void,
     deleteTask: ({variables: {
         id: string
     }}) => void,
@@ -43,16 +46,6 @@ class TodoItem extends PureComponent<Props, State> {
         });
     }
 
-    saveUpdatedTask = (evt) => {
-        evt.preventDefault();
-
-        this.props.editTodo(this.props.id, this.state.value);
-
-        this.setState({
-            readOnly: true
-        });
-    }
-
     _deleteTask = async (id) => {
         await this.props.deleteTask({
             variables: {
@@ -69,6 +62,21 @@ class TodoItem extends PureComponent<Props, State> {
                 id,
                 isDone
             }
+        });
+    }
+    
+    _updateTask = async (evt, id, name) => {
+        evt.preventDefault();
+        
+        await this.props.updateTask({
+            variables: {
+                id,
+                name
+            }
+        })
+
+        this.setState({
+            readOnly: true
         });
     }
 
@@ -92,7 +100,9 @@ class TodoItem extends PureComponent<Props, State> {
                     </Checkbox>
                 )
                 : (
-                    <Form layout="inline" onSubmit={this.saveUpdatedTask}>
+                    <Form
+                        layout="inline"
+                        onSubmit={ (evt) => this._updateTask(evt, id, this.state.value)} >
                         <Input
                             defaultValue={name}
                             onChange={ (evt) => this.setState({ value: evt.target.value }) }
@@ -117,5 +127,6 @@ class TodoItem extends PureComponent<Props, State> {
 
 export default Form.create()(compose(
     graphql(REMOVE_TASK, { name: 'deleteTask' }),
-    graphql(TOGGLE_DONE, { name: 'toggleDone' })
+    graphql(TOGGLE_DONE, { name: 'toggleDone' }),
+    graphql(UPDATE_TASK, { name: 'updateTask' }) 
 )(onClickOutside(TodoItem)));

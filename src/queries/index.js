@@ -28,10 +28,19 @@ export const REMOVE_TASK = gql`
 `
 
 export const TOGGLE_DONE = gql`
-    mutation TaskMutation($id: ID!, $isDone: Boolean) {
+    mutation TaskMutation($id: ID!, $isDone: Boolean!) {
         toggleDone(id: $id, isDone: $isDone) {
             id
             isDone
+            name
+        }
+    }
+`
+
+export const UPDATE_TASK = gql`
+    mutation TaskMutation($id: ID!, $name: String!) {
+        editTask(id: $id, name: $name) {
+            id
             name
         }
     }
