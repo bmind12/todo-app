@@ -39,6 +39,12 @@ class TodoItem extends PureComponent<Props, State> {
         });
     }
 
+    handleInputChange = (evt) => {
+        this.setState({
+            value: evt.target.value
+        });
+    }
+
     handleModeSwitch = () => {
         this.setState({
             value: this.props.name,
@@ -46,32 +52,32 @@ class TodoItem extends PureComponent<Props, State> {
         });
     }
 
-    _deleteTask = async (id) => {
+    _deleteTask = async () => {
         await this.props.deleteTask({
             variables: {
-                id
+                id: this.props.id
             }
         });
     }
 
-    _toggleDone = async (evt, id) => {
+    _toggleDone = async (evt) => {
         const isDone = evt.target.checked;
         
         await this.props.toggleDone({
             variables: {
-                id,
+                id: this.props.id,
                 isDone
             }
         });
     }
     
-    _updateTask = async (evt, id, name) => {
+    _updateTask = async (evt) => {
         evt.preventDefault();
         
         await this.props.updateTask({
             variables: {
-                id,
-                name
+                id: this.props.id,
+                name: this.state.value
             }
         })
 
@@ -81,20 +87,20 @@ class TodoItem extends PureComponent<Props, State> {
     }
 
     render() {
-        const { id, name } = this.props;
+        const { name } = this.props;
 
         return (
             <List.Item
                 actions={[
-                    <a onClick={ () => this.handleModeSwitch() }>edit</a>,
-                    <a onClick={ () => this._deleteTask(id) }>delete</a>
+                    <a onClick={this.handleModeSwitch}>edit</a>,
+                    <a onClick={this._deleteTask}>delete</a>
                 ]}
             >
             { this.state.readOnly
                 ? (
                     <Checkbox
                         checked={this.props.isDone}
-                        onChange={ (evt) => this._toggleDone(evt, id) }
+                        onChange={this._toggleDone}
                     >
                         {name}
                     </Checkbox>
@@ -102,10 +108,10 @@ class TodoItem extends PureComponent<Props, State> {
                 : (
                     <Form
                         layout="inline"
-                        onSubmit={ (evt) => this._updateTask(evt, id, this.state.value)} >
+                        onSubmit={this._updateTask} >
                         <Input
                             defaultValue={name}
-                            onChange={ (evt) => this.setState({ value: evt.target.value }) }
+                            onChange={this.handleInputChange}
                             ref="textInput"
                             size="small"
                             style={{ width: 90, marginRight: 3 }}
@@ -119,7 +125,7 @@ class TodoItem extends PureComponent<Props, State> {
                         </Button>
                     </Form>
                 )
-            }                    
+            }
             </List.Item>
         )
     }

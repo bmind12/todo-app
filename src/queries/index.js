@@ -9,16 +9,6 @@ export const ADD_TASK = gql`
     }
 `
 
-export const DATA_QUERY = gql`
-    query {
-        todoList {
-            id
-            isDone
-            name
-        }
-    }
-`
-
 export const REMOVE_TASK = gql`
     mutation TaskMutation($id: ID!) {
         deleteTask(id: $id) {
@@ -32,7 +22,6 @@ export const TOGGLE_DONE = gql`
         toggleDone(id: $id, isDone: $isDone) {
             id
             isDone
-            name
         }
     }
 `

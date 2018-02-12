@@ -2,7 +2,7 @@
 import React from 'react';
 import { Alert, List, Spin } from 'antd';
 import { graphql } from 'react-apollo';
-import { DATA_QUERY } from '../queries';
+import gql from 'graphql-tag';
 import TodoItem from './TodoItem';
 import type { Task } from '../types';
 
@@ -59,6 +59,16 @@ const TodoList = (props: Props) => {
             )}
         />
     )
-}
+};
+
+const DATA_QUERY = gql`
+    query {
+        todoList {
+            id
+            isDone
+            name
+        }
+    }
+`
 
 export default graphql(DATA_QUERY, { name: 'data' }) (TodoList);
