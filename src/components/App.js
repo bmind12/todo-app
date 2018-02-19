@@ -3,10 +3,10 @@ import React from 'react';
 import NewTaskForm from './NewTaskForm';
 import TodoList from './TodoList';
 
-const App = () => {
+const App = props => {
     return (
         <div>
-            <NewTaskForm />
+            <NewTaskForm client={props.client} />
             <TodoList />
         </div>
     )

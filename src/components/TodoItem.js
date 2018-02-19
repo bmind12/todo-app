@@ -1,8 +1,8 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { graphql, compose } from 'react-apollo';
+import gql from 'graphql-tag';
 import onClickOutside from 'react-onclickoutside';
-import { REMOVE_TASK, TOGGLE_DONE, UPDATE_TASK } from '../queries';
 import { Button, Checkbox, Form, Input, List } from 'antd';
 
 type Props = {
@@ -130,6 +130,32 @@ class TodoItem extends PureComponent<Props, State> {
         )
     }
 }
+
+export const REMOVE_TASK = gql`
+    mutation TaskMutation($id: ID!) {
+        deleteTask(id: $id) {
+            id
+        }
+    }
+`
+
+export const TOGGLE_DONE = gql`
+    mutation TaskMutation($id: ID!, $isDone: Boolean!) {
+        toggleDone(id: $id, isDone: $isDone) {
+            id
+            isDone
+        }
+    }
+`
+
+export const UPDATE_TASK = gql`
+    mutation TaskMutation($id: ID!, $name: String!) {
+        editTask(id: $id, name: $name) {
+            id
+            name
+        }
+    }
+`
 
 export default Form.create()(compose(
     graphql(REMOVE_TASK, { name: 'deleteTask' }),
