@@ -1,5 +1,5 @@
-type Task = {
+export type Task = {
     id: string,
-    isDone: boolean,
-    name: string
-};
+    name: string,
+    isDone: boolean
+}
