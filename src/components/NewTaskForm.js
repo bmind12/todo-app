@@ -38,7 +38,7 @@ class NewTaskForm extends PureComponent<Props, State> {
             variables: {
                 name
             }
-        });
+        })
 
         this.setState({
             input: ''
@@ -74,7 +74,7 @@ class NewTaskForm extends PureComponent<Props, State> {
     }
 }
 
-export const ADD_TASK = gql`
+const ADD_TASK = gql`
     mutation TaskMutation($name: String!) {
         addTask(name: $name) {
             id
@@ -83,4 +83,9 @@ export const ADD_TASK = gql`
     }
 `
 
-export default Form.create()(graphql(ADD_TASK, { name: 'addTask' })(NewTaskForm))
+export default Form.create()(graphql(ADD_TASK, {
+    name: 'addTask',
+    options: {
+        refetchQueries: ["TodoList"]
+    }
+})(NewTaskForm))

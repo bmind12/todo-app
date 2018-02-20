@@ -1,28 +1,20 @@
 // @flow
 import React from 'react';
 import { Alert, List, Spin } from 'antd';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import TodoItem from './TodoItem';
 import type { Task } from '../types';
 
 type Props = {
-    data: {
-        error: string,
-        loading: boolean,
-        todoList: Array<Task>
-    }
+    error: string,
+    loading: boolean,
+    todoItems: Array<Task>
 };
 
 const TodoList = (props: Props) => {
-    
-    TodoList.defaultProps = {
-        data: []
-    };
 
-    const data = props.data;
+    const { error, loading, todoItems } = props;
 
-    if (data && data.loading) {
+    if (loading) {
         return (
             <div className="spin__container">
                 <Spin />
@@ -30,12 +22,12 @@ const TodoList = (props: Props) => {
         )
     }
 
-    if (data && data.error) {
+    if (error) {
         return (
             <Alert
                 closable
                 description="Couldn't feth data from server"
-                message={data.error}
+                message={error}
                 style={{ width: 480 }}
                 type="error"
             />
@@ -45,7 +37,7 @@ const TodoList = (props: Props) => {
     return (
         <List
             bordered
-            dataSource={data.todoList}
+            dataSource={todoItems}
             header={<div>Task table</div>}
             size="small"
             style={{ width: 480 }}
@@ -61,14 +53,4 @@ const TodoList = (props: Props) => {
     )
 };
 
-const DATA_QUERY = gql`
-    query {
-        todoList {
-            id
-            isDone
-            name
-        }
-    }
-`
-
-export default graphql(DATA_QUERY, { name: 'data' }) (TodoList);
+export default TodoList;

@@ -131,7 +131,7 @@ class TodoItem extends PureComponent<Props, State> {
     }
 }
 
-export const REMOVE_TASK = gql`
+const REMOVE_TASK = gql`
     mutation TaskMutation($id: ID!) {
         deleteTask(id: $id) {
             id
@@ -139,7 +139,7 @@ export const REMOVE_TASK = gql`
     }
 `
 
-export const TOGGLE_DONE = gql`
+const TOGGLE_DONE = gql`
     mutation TaskMutation($id: ID!, $isDone: Boolean!) {
         toggleDone(id: $id, isDone: $isDone) {
             id
@@ -148,7 +148,7 @@ export const TOGGLE_DONE = gql`
     }
 `
 
-export const UPDATE_TASK = gql`
+const UPDATE_TASK = gql`
     mutation TaskMutation($id: ID!, $name: String!) {
         editTask(id: $id, name: $name) {
             id
@@ -158,7 +158,16 @@ export const UPDATE_TASK = gql`
 `
 
 export default Form.create()(compose(
-    graphql(REMOVE_TASK, { name: 'deleteTask' }),
-    graphql(TOGGLE_DONE, { name: 'toggleDone' }),
-    graphql(UPDATE_TASK, { name: 'updateTask' }) 
+    graphql(REMOVE_TASK, {
+        name: 'deleteTask',
+        options: {
+            refetchQueries: ["TodoList"]
+        }
+    }),
+    graphql(TOGGLE_DONE, {
+        name: 'toggleDone'
+    }),
+    graphql(UPDATE_TASK, {
+        name: 'updateTask'
+    }) 
 )(onClickOutside(TodoItem)));
