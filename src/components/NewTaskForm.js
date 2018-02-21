@@ -56,7 +56,9 @@ class NewTaskForm extends PureComponent<Props, State> {
             },
             update: (store, { data: { addTask: newTask } }) => {
                 const data = store.readQuery({ query: DATA_QUERY });
+                
                 data.todoList.push(newTask);
+                
                 store.writeQuery({
                     query: DATA_QUERY,
                     data

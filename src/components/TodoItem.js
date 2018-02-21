@@ -67,6 +67,7 @@ class TodoItem extends PureComponent<Props, State> {
             },
             update: (store, { data: { deleteTask: { id } }}) => {
                 const data = store.readQuery({ query: DATA_QUERY });
+                
                 data.todoList = data.todoList.filter(todo => todo.id !== id);
                 
                 store.writeQuery({
@@ -84,6 +85,28 @@ class TodoItem extends PureComponent<Props, State> {
             variables: {
                 id: this.props.id,
                 isDone
+            },
+            optimisticResponse: {
+                __typename: 'Mutation',
+                toggleDone: {
+                    __typename: 'Task',
+                    id: this.props.id,
+                    isDone
+                },
+            },
+            update: (store, { data: { toggleDone: updatedTask } }) => {
+                const data = store.readQuery({ query: DATA_QUERY });
+                
+                data.todoList.forEach(todo => {
+                    todo.isDone = (todo.id === updatedTask.id) 
+                        ? updatedTask.isDone
+                        : todo.isDone;
+                })
+                
+                store.writeQuery({
+                    query: DATA_QUERY,
+                    data
+                })
             }
         });
     }
@@ -95,6 +118,28 @@ class TodoItem extends PureComponent<Props, State> {
             variables: {
                 id: this.props.id,
                 name: this.state.value
+            },
+            optimisticResponse: {
+                __typename: 'Mutation',
+                editTask: {
+                    __typename: 'Task',
+                    id: this.props.id,
+                    name: this.state.value
+                },
+            },
+            update: (store, { data: { editTask: updatedTask } }) => {
+                const data = store.readQuery({ query: DATA_QUERY });
+                
+                data.todoList.forEach(todo => {
+                    todo.name = (todo.id === updatedTask.id) 
+                        ? updatedTask.name
+                        : todo.name;
+                })
+                
+                store.writeQuery({
+                    query: DATA_QUERY,
+                    data
+                })
             }
         })
 
