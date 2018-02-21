@@ -4,6 +4,7 @@ import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import onClickOutside from 'react-onclickoutside';
 import { Button, Checkbox, Form, Input, List } from 'antd';
+import { DATA_QUERY } from './App';
 
 type Props = {
     updateTask: ({variables: {
@@ -56,6 +57,22 @@ class TodoItem extends PureComponent<Props, State> {
         await this.props.deleteTask({
             variables: {
                 id: this.props.id
+            },
+            optimisticResponse: {
+                __typename: 'Mutation',
+                deleteTask: {
+                    __typename: 'Task',
+                    id: this.props.id
+                },
+            },
+            update: (store, { data: { deleteTask: { id } }}) => {
+                const data = store.readQuery({ query: DATA_QUERY });
+                data.todoList = data.todoList.filter(todo => todo.id !== id);
+                
+                store.writeQuery({
+                    query: DATA_QUERY,
+                    data: data
+                })
             }
         });
     }
@@ -169,5 +186,5 @@ export default Form.create()(compose(
     }),
     graphql(UPDATE_TASK, {
         name: 'updateTask'
-    }) 
+    })
 )(onClickOutside(TodoItem)));

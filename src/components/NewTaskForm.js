@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { Button, Form, Input } from 'antd';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { DATA_QUERY } from './App';
 const FormItem = Form.Item;
 
 type Props = {
@@ -33,17 +34,35 @@ class NewTaskForm extends PureComponent<Props, State> {
         const name = this.state.input;
         
         if (!name) return;
-        
-        await this.props.addTask({
-            variables: {
-                name
-            }
-        })
 
         this.setState({
             input: ''
         });
+        
         this.props.form.resetFields();
+        
+        await this.props.addTask({
+            variables: {
+                name
+            },
+            optimisticResponse: {
+                __typename: 'Mutation',
+                addTask: {
+                    __typename: 'Task',
+                    id: -1,
+                    name,
+                    isDone: false
+                },
+            },
+            update: (store, { data: { addTask: newTask } }) => {
+                const data = store.readQuery({ query: DATA_QUERY });
+                data.todoList.push(newTask);
+                store.writeQuery({
+                    query: DATA_QUERY,
+                    data
+                })
+            }
+        })
     }
 
     render() {
@@ -78,6 +97,7 @@ const ADD_TASK = gql`
     mutation TaskMutation($name: String!) {
         addTask(name: $name) {
             id
+            isDone
             name
         }
     }

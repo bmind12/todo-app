@@ -21,9 +21,7 @@ const App = (props: Props) => {
 
     return (
         <div>
-            <NewTaskForm
-                client={props.client}
-            />
+            <NewTaskForm />
             <TodoList
                 error={error}
                 loading={loading}
@@ -33,7 +31,7 @@ const App = (props: Props) => {
     )
 }
 
-const DATA_QUERY = gql`
+export const DATA_QUERY = gql`
     query TodoList {
         todoList {
             id
