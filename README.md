@@ -1,6 +1,6 @@
 ## Todo App
 
-A general `CRUD` Todo App powered with `GraphQL`, `Apollo` and `React`. Designed with `Ant Design` components.
+A general `CRUD` Todo App powered by `GraphQL`, `Apollo` and `React`. Designed with `Ant Design` components.
 
 ## Getting started
 
