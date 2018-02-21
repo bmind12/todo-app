@@ -1,9 +1,10 @@
 // @flow
 import React, { PureComponent } from 'react';
 import { graphql, compose } from 'react-apollo';
+import gql from 'graphql-tag';
 import onClickOutside from 'react-onclickoutside';
-import { REMOVE_TASK, TOGGLE_DONE, UPDATE_TASK } from '../queries';
 import { Button, Checkbox, Form, Input, List } from 'antd';
+import { DATA_QUERY } from './App';
 
 type Props = {
     updateTask: ({variables: {
@@ -56,6 +57,22 @@ class TodoItem extends PureComponent<Props, State> {
         await this.props.deleteTask({
             variables: {
                 id: this.props.id
+            },
+            optimisticResponse: {
+                __typename: 'Mutation',
+                deleteTask: {
+                    __typename: 'Task',
+                    id: this.props.id
+                },
+            },
+            update: (store, { data: { deleteTask: { id } }}) => {
+                const data = store.readQuery({ query: DATA_QUERY });
+                data.todoList = data.todoList.filter(todo => todo.id !== id);
+                
+                store.writeQuery({
+                    query: DATA_QUERY,
+                    data: data
+                })
             }
         });
     }
@@ -131,8 +148,43 @@ class TodoItem extends PureComponent<Props, State> {
     }
 }
 
+const REMOVE_TASK = gql`
+    mutation TaskMutation($id: ID!) {
+        deleteTask(id: $id) {
+            id
+        }
+    }
+`
+
+const TOGGLE_DONE = gql`
+    mutation TaskMutation($id: ID!, $isDone: Boolean!) {
+        toggleDone(id: $id, isDone: $isDone) {
+            id
+            isDone
+        }
+    }
+`
+
+const UPDATE_TASK = gql`
+    mutation TaskMutation($id: ID!, $name: String!) {
+        editTask(id: $id, name: $name) {
+            id
+            name
+        }
+    }
+`
+
 export default Form.create()(compose(
-    graphql(REMOVE_TASK, { name: 'deleteTask' }),
-    graphql(TOGGLE_DONE, { name: 'toggleDone' }),
-    graphql(UPDATE_TASK, { name: 'updateTask' }) 
+    graphql(REMOVE_TASK, {
+        name: 'deleteTask',
+        options: {
+            refetchQueries: ["TodoList"]
+        }
+    }),
+    graphql(TOGGLE_DONE, {
+        name: 'toggleDone'
+    }),
+    graphql(UPDATE_TASK, {
+        name: 'updateTask'
+    })
 )(onClickOutside(TodoItem)));
