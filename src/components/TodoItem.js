@@ -176,10 +176,7 @@ const UPDATE_TASK = gql`
 
 export default Form.create()(compose(
     graphql(REMOVE_TASK, {
-        name: 'deleteTask',
-        options: {
-            refetchQueries: ["TodoList"]
-        }
+        name: 'deleteTask'
     }),
     graphql(TOGGLE_DONE, {
         name: 'toggleDone'

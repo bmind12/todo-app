@@ -104,8 +104,5 @@ const ADD_TASK = gql`
 `
 
 export default Form.create()(graphql(ADD_TASK, {
-    name: 'addTask',
-    options: {
-        refetchQueries: ["TodoList"]
-    }
+    name: 'addTask'
 })(NewTaskForm))
